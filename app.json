@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "BAWDYHAUZ",
+    "slug": "bawdyhauz-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "bawdyhauz",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#050505",
+      "image": "./assets/bawdyhauz-logo.png",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "associatedDomains": [
+        "applinks:www.bawdyhauz.com",
+        "applinks:bawdyhauz.com"
+      ],
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bawdyhauz.mobile"
+    },
+    "android": {
+      "package": "com.bawdyhauz.mobile",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "www.bawdyhauz.com",
+              "pathPrefix": "/app"
+            },
+            {
+              "scheme": "https",
+              "host": "bawdyhauz.com",
+              "pathPrefix": "/app"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#050505"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "BAWDYHAUZ uses photo access only when you choose media for private review."
+        }
+      ]
+    ]
+  }
+}
