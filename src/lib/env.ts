@@ -1,19 +1,24 @@
+import Constants from "expo-constants";
+
+const extra = (Constants.expoConfig?.extra ?? {}) as Record<string, unknown>;
+
 export type RuntimeConfig = {
   supabasePublishableKey?: string;
   supabaseUrl?: string;
-  useSupabase: boolean;
 };
 
 export const runtimeConfig: RuntimeConfig = {
+  supabaseUrl:
+    (extra.supabaseUrl as string | undefined)?.trim() ||
+    process.env.EXPO_PUBLIC_SUPABASE_URL?.trim(),
+
   supabasePublishableKey:
-    process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
-    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-  supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
-  useSupabase: process.env.EXPO_PUBLIC_USE_SUPABASE === "true"
+    (extra.supabaseKey as string | undefined)?.trim() ||
+    process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim() ||
+    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim()
 };
 
 export const isSupabaseConfigured = Boolean(
-  runtimeConfig.useSupabase &&
-    runtimeConfig.supabaseUrl &&
+  runtimeConfig.supabaseUrl &&
     runtimeConfig.supabasePublishableKey
 );
