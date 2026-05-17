@@ -35,6 +35,8 @@ export type AdminApplicant = {
   status: AdminApplicationStatus;
   userId?: string;
   verificationStatus?: string;
+    email?: string;
+    isWebsiteApplicant?: boolean;
 };
 
 export type AdminVerification = {
