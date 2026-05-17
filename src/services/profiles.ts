@@ -1,4 +1,4 @@
-import { memberProfiles, MemberProfile } from "@/data/matchmaking";
+import { MemberProfile } from "@/data/matchmaking";
 import { supabase, supabaseMode } from "@/lib/supabase";
 
 import { requireAuthenticatedUser } from "./auth";
@@ -52,17 +52,13 @@ export function mapProfileRow(row: ProfileRow): MemberProfile {
 
 export async function loadDiscoverProfiles(): Promise<ServiceResult<MemberProfile[]>> {
   if (!supabase) {
-    return { data: memberProfiles.map(scoreProfile), mode: supabaseMode };
+    return { data: [], mode: supabaseMode };
   }
 
   const { data, error } = await supabase.rpc("discover_profiles");
 
   if (error || !data?.length) {
-    return {
-      data: memberProfiles.map(scoreProfile),
-      error: error?.message,
-      mode: supabaseMode
-    };
+    return { data: [], error: error?.message, mode: supabaseMode };
   }
 
   return {
