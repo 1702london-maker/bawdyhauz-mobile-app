@@ -6,7 +6,6 @@ import { isUuid } from "@/lib/ids";
 import { mapProfileRow } from "./profiles";
 import { ServiceResult } from "./types";
 import { recordEmailEvent } from "./notifications";
-import { trackAnalyticsEvent } from "./analytics";
 
 type MatchRow = {
   id: string;
@@ -58,7 +57,6 @@ export async function expressInterest(profileId: string): Promise<ServiceResult<
 
   if (!error) {
     await recordEmailEvent("match_created", { profileId });
-    await trackAnalyticsEvent("match.interest_expressed", "discover");
   }
 
   return { data: { matched: false, profileId }, error: error?.message, mode: supabaseMode };
@@ -66,12 +64,12 @@ export async function expressInterest(profileId: string): Promise<ServiceResult<
 
 export async function loadApprovedMatches(fallback: MemberProfile[]): Promise<ServiceResult<MemberProfile[]>> {
   if (!supabase) {
-    return { data: fallback, mode: supabaseMode };
+    return { data: [], mode: supabaseMode };
   }
 
   const session = await requireAuthenticatedUser();
   if (!session.data) {
-    return { data: fallback, error: session.error, mode: supabaseMode };
+    return { data: [], error: session.error, mode: supabaseMode };
   }
 
   const { data: ownProfile } = await supabase
@@ -88,7 +86,7 @@ export async function loadApprovedMatches(fallback: MemberProfile[]): Promise<Se
     .eq("status", "mutual");
 
   if (error || !data?.length) {
-    return { data: fallback, error: error?.message, mode: supabaseMode };
+    return { data: [], error: error?.message, mode: supabaseMode };
   }
 
   const profiles = (data as MatchRow[])
@@ -103,7 +101,7 @@ export async function loadApprovedMatches(fallback: MemberProfile[]): Promise<Se
     })
     .filter(Boolean);
 
-  return { data: profiles.length ? profiles : fallback, mode: supabaseMode };
+  return { data: profiles, mode: supabaseMode };
 }
 
 export { matchStatusLabels };
