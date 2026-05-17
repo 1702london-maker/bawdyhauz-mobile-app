@@ -1,11 +1,10 @@
-import { TherapistProfile, therapists } from "@/data/wellness";
+import { TherapistProfile } from "@/data/wellness";
 import { supabase, supabaseMode } from "@/lib/supabase";
 import { isUuid } from "@/lib/ids";
 
 import { requireAuthenticatedUser } from "./auth";
 import { ServiceResult } from "./types";
 import { recordEmailEvent } from "./notifications";
-import { trackAnalyticsEvent } from "./analytics";
 
 type TherapistRow = {
   bio: string | null;
@@ -27,7 +26,7 @@ export type TherapistBookingRequest = {
 
 export async function loadTherapists(): Promise<ServiceResult<TherapistProfile[]>> {
   if (!supabase) {
-    return { data: therapists, mode: supabaseMode };
+    return { data: [], mode: supabaseMode };
   }
 
   const { data, error } = await supabase
@@ -36,7 +35,7 @@ export async function loadTherapists(): Promise<ServiceResult<TherapistProfile[]
     .eq("verified", true);
 
   if (error || !data?.length) {
-    return { data: therapists, error: error?.message, mode: supabaseMode };
+    return { data: [], error: error?.message, mode: supabaseMode };
   }
 
   return {
@@ -79,9 +78,6 @@ export async function requestTherapistSession(
 
   if (!error) {
     await recordEmailEvent("therapist_booking_received", { therapistId: booking.therapistId });
-    await trackAnalyticsEvent("therapist.session_requested", "wellness", {
-      sessionType: booking.sessionType
-    });
   }
 
   return { data: booking, error: error?.message, mode: supabaseMode };
