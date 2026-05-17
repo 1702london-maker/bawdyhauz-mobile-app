@@ -7,6 +7,17 @@ import {
   adminConciergeRequests,
   AdminExperienceGuest,
   adminExperienceGuests,
+  type WebsiteApplicationRow = {
+    id: string;
+    first_name: string | null;
+    age: number | null;
+    email: string | null;
+    location: string | null;
+    primary_interest: string | null;
+    message: string | null;
+    status: string;
+    created_at: string;
+};
   AdminTherapistBooking,
   adminTherapistBookings,
   AdminVerification,
@@ -15,6 +26,7 @@ import {
 } from "@/data/admin";
 import { moderationReports, ModerationReport } from "@/data/safety";
 import { supabase, supabaseMode } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 import { requireAuthenticatedUser } from "./auth";
 import { ServiceResult } from "./types";
