@@ -48,10 +48,9 @@ export type ExperienceWaitlistRequest = {
 };
 
 export async function loadPrivateExperiences(): Promise<ServiceResult<Experience[]>> {
-  if (!supabase) {
-    return { data: experiences, mode: supabaseMode };
+ if (!supabase) {
+    return { data: [], mode: supabaseMode };
   }
-
   const { data, error } = await supabase
     .from("private_experiences")
     .select(
@@ -60,9 +59,8 @@ export async function loadPrivateExperiences(): Promise<ServiceResult<Experience
     .order("created_at", { ascending: false });
 
   if (error || !data?.length) {
-    return { data: experiences, error: error?.message, mode: supabaseMode };
+    return { data: [], error: error?.message, mode: supabaseMode };
   }
-
   return {
     data: (data as ExperienceRow[]).map((item) => ({
       accessType: mapAccessType(item.access_type),
